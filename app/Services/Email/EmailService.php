@@ -328,8 +328,6 @@ class EmailService
                 )
             );
 
-            dd($text);
-
             if (blank($text)) {
                 $resume->update([
                     'parse_status' => 'failed',
