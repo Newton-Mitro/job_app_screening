@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\EmailAttachment;
 use App\Models\Resume;
 use App\Services\Candidate\CandidateService;
 use App\Services\Resume\ResumeService;
@@ -64,7 +65,7 @@ class ProcessResumeJob implements ShouldQueue
             ]
         );
 
-        $resume = Resume::query()
+        $resume = EmailAttachment::query()
             ->find($this->resumeId);
 
         if (!$resume) {
@@ -225,7 +226,7 @@ class ProcessResumeJob implements ShouldQueue
         /*
          * Mark resume as failed if it still exists.
          */
-        $resume = Resume::query()
+        $resume = EmailAttachment::query()
             ->find($this->resumeId);
 
         if ($resume) {
