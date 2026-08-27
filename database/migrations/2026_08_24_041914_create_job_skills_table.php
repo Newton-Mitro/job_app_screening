@@ -5,30 +5,21 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
-    /**
-     * Run the migrations.
-     */
+
     public function up(): void
     {
         Schema::create('job_skills', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('job_circular_id')
-                ->constrained('job_circulars')
-                ->cascadeOnDelete();
+            $table->foreignId('job_circular_id')->constrained('job_circulars')->cascadeOnDelete();
             $table->string('name');
-            $table->enum('type', [
-                'required',
-                'preferred'
-            ]);
-            $table->unsignedInteger('weight')
-                ->default(1);
+            $table->enum('type', ['required', 'preferred', 'bonus'])->default('required');
+            $table->decimal('weight', 5, 2)->default(0);
+            $table->decimal('minimum_experience_years', 5, 1)->nullable();
+            $table->enum('proficiency', ['beginner', 'intermediate', 'advanced', 'expert'])->nullable();
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('job_skills');

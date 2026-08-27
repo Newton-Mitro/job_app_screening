@@ -14,6 +14,13 @@ class CandidateSkill extends Model
         'source',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'candidate_id' => 'integer',
+        ];
+    }
+
     public function candidate(): BelongsTo
     {
         return $this->belongsTo(Candidate::class);

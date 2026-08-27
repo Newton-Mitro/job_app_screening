@@ -17,6 +17,12 @@ class Candidate extends Model
         'current_company',
         'total_experience_years',
         'skills',
+        'current_salary',
+        'expected_salary',
+        'notice_period',
+        'linkedin_url',
+        'github_url',
+        'portfolio_url',
     ];
 
     protected function casts(): array
@@ -25,21 +31,23 @@ class Candidate extends Model
             'education' => 'array',
             'skills' => 'array',
             'total_experience_years' => 'decimal:1',
+            'current_salary' => 'decimal:2',
+            'expected_salary' => 'decimal:2',
         ];
-    }
-
-    public function resumes(): HasMany
-    {
-        return $this->hasMany(Resume::class);
     }
 
     public function applications(): HasMany
     {
-        return $this->hasMany(Application::class);
+        return $this->hasMany(CandidateApplication::class);
     }
 
     public function skillsRelation(): HasMany
     {
         return $this->hasMany(CandidateSkill::class);
+    }
+
+    public function emailAttachments(): HasMany
+    {
+        return $this->hasMany(EmailAttachment::class);
     }
 }

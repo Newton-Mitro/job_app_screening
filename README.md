@@ -1417,3 +1417,101 @@ Each process should have one responsibility and communicate through queues or cl
 ```
 
 This will make your system much easier to scale later when your organization receives hundreds or thousands of applications.
+
+The best approach is not to identify a resume using only the filename. For your screening system, use a multi-step classification strategy.
+
+Recommended flow
+
+```
+Email
+  │
+  ├── attachment.pdf
+  ├── cover-letter.pdf
+  ├── certificate.pdf
+  └── portfolio.pdf
+        │
+        ▼
+   Attachment Processor
+        │
+        ├── Filename analysis
+        ├── MIME/type check
+        ├── Text extraction
+        └── Content analysis
+                │
+                ▼
+          Attachment Type
+        ┌───────┴────────┐
+        │                │
+     Resume          Other
+        │                │
+        ▼                ▼
+   Resume Parser    Store normally
+```
+
+1. First check the filename
+
+This is a cheap first filter.
+
+For example:
+
+```php
+private function guessAttachmentType(string $filename): string
+{
+    $name = strtolower($filename);
+
+    if (preg_match(
+        '/(resume|cv|curriculum[\s_-]*vitae|biodata)/i',
+        $name
+    )) {
+        return 'resume';
+    }
+
+    if (preg_match(
+        '/(cover[\s_-]*letter|motivation[\s_-]*letter)/i',
+        $name
+    )) {
+        return 'cover_letter';
+    }
+
+    if (preg_match(
+        '/(certificate|certification|transcript|academic)/i',
+        $name
+    )) {
+        return 'certificate';
+    }
+
+    if (preg_match(
+        '/(portfolio|work[\s_-]*sample)/i',
+        $name
+    )) {
+        return 'portfolio';
+    }
+
+    return 'other';
+}
+```
+
+So:
+
+```
+Newton_Mitro_CV.pdf          → resume
+Newton_Resume_2026.pdf       → resume
+Cover_Letter.pdf             → cover_letter
+BSc_Certificate.pdf          → certificate
+Portfolio.pdf                → portfolio
+document.pdf                 → other
+```
+
+But don't trust this alone.
+
+A candidate might upload:
+
+```
+document.pdf
+newton.pdf
+application.pdf
+final.pdf
+myfile.pdf
+```
+
+and it could still be a resume.

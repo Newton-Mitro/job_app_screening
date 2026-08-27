@@ -5,36 +5,16 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
+
     public function up(): void
     {
         Schema::create('candidate_skills', function (Blueprint $table) {
-
             $table->id();
-
-            $table->foreignId('candidate_id')
-                ->constrained()
-                ->cascadeOnDelete();
-
+            $table->foreignId('candidate_id')->constrained()->cascadeOnDelete();
             $table->string('name');
-
-            $table->string(
-                'normalized_name'
-            );
-
-            $table->string(
-                'source'
-            )->default('resume');
-
+            $table->string('normalized_name');
+            $table->string('source')->default('resume');
             $table->timestamps();
-
-            $table->unique([
-                'candidate_id',
-                'normalized_name',
-            ]);
-
-            $table->index(
-                'normalized_name'
-            );
         });
     }
 

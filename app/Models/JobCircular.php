@@ -10,18 +10,24 @@ class JobCircular extends Model
     protected $fillable = [
         'code',
         'title',
+        'vacancy_count',
         'description',
-        'required_skills',
+        'requirements',
+        'benefits',
         'minimum_experience',
+        'maximum_salary',
         'education_requirement',
         'status',
+        'deadline',
     ];
 
     protected function casts(): array
     {
         return [
-            'required_skills' => 'array',
+            'vacancy_count' => 'integer',
             'minimum_experience' => 'integer',
+            'maximum_salary' => 'decimal:2',
+            'deadline' => 'date',
         ];
     }
 
@@ -32,6 +38,11 @@ class JobCircular extends Model
 
     public function applications(): HasMany
     {
-        return $this->hasMany(Application::class);
+        return $this->hasMany(CandidateApplication::class);
+    }
+
+    public function screeningQuestions(): HasMany
+    {
+        return $this->hasMany(ScreeningQuestion::class);
     }
 }
